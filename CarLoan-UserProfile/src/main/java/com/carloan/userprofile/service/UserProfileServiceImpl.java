@@ -1,6 +1,7 @@
 package com.carloan.userprofile.service;
 
 import com.carloan.userprofile.exception.UserProfileAlreadyExistsException;
+import com.carloan.userprofile.exception.UserProfileNotFoundException;
 import com.carloan.userprofile.model.UserProfile;
 import com.carloan.userprofile.repository.UserProfileRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     public UserProfile registerUser(UserProfile userProfile) throws UserProfileAlreadyExistsException {
 
         try {
-            if (userProfileRepository.findByEmail(userProfile.getEmail()).size() > 0) {
+            if (userProfileRepository.findByEmail(userProfile.getEmail()).isPresent()) {
                 throw new UserProfileAlreadyExistsException("Error");
             } else if (userProfileRepository.save(userProfile) == null) {
                 throw new UserProfileAlreadyExistsException("Error");
@@ -34,6 +35,21 @@ public class UserProfileServiceImpl implements UserProfileService {
             }
         } catch (Exception e) {
             throw new UserProfileAlreadyExistsException("Error");
+        }
+    }
+
+    @Override
+    public void updateUserDetails(String email, UserProfile userProfile) throws UserProfileNotFoundException {
+        UserProfile user = userProfileRepository.findByEmail(email).orElseThrow(() -> new UserProfileNotFoundException("User doesn't exist"));
+
+        try {
+            user.setEmail(userProfile.getEmail());
+            user.setContact(userProfile.getContact());
+            user.setName(userProfile.getName());
+            user.setSalary(userProfile.getSalary());
+            userProfileRepository.save(user);
+        } catch (Exception e) {
+            throw new UserProfileNotFoundException("User doesn't exist");
         }
     }
 }
