@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @Slf4j
 @RequestMapping("api/v1")
@@ -20,7 +22,7 @@ public class UserProfileController {
     private UserProfileService userProfileService;
 
     @PostMapping("/user")
-    public ResponseEntity<String> registerUserProfile(@RequestBody UserProfileDTO userProfileDTO) {
+    public ResponseEntity<String> registerUserProfile(@RequestBody @Valid UserProfileDTO userProfileDTO) {
 
         ResponseEntity<String> entity;
         try {
