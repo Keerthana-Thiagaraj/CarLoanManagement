@@ -3,16 +3,15 @@ package com.carloan.userprofile.controller;
 
 import com.carloan.userprofile.dto.UserProfileDTO;
 import com.carloan.userprofile.model.UserProfile;
+import com.carloan.userprofile.repository.UserProfileRepository;
 import com.carloan.userprofile.service.UserProfileService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,7 +21,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -31,16 +32,24 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @ExtendWith(MockitoExtension.class)
 public class UserProfileControllerTest {
 
+    private static ObjectMapper mapper = new ObjectMapper();
+
     @Mock
     UserProfileService userProfileService;
+
+    @Mock
+    UserProfileRepository userProfileRepository;
 
     @InjectMocks
     UserProfileController userProfileController;
 
     private UserProfileDTO userProfile;
 
+    private UserProfile updateUserProfileStubData = new UserProfile(1, "keerthana", "keertana.t1308@gmail.com", 200000.0, 9500387199L);
+
     @Autowired
     private MockMvc mockMvc;
+
 
     @Test
     public void testSaveUserProfileSuccess() throws Exception {
@@ -60,6 +69,26 @@ public class UserProfileControllerTest {
                 "    \"contact\":9500387198}";
         MockHttpServletRequestBuilder builder =
                 MockMvcRequestBuilders.post("/api/v1/user").contentType(MediaType.APPLICATION_JSON).content(invalidUserProfileRequest);
-        mockMvc.perform(builder).andExpect(MockMvcResultMatchers.status().isBadRequest());
+        mockMvc.perform(builder).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testUpdateUserProfileSuccess() throws Exception {
+
+        Mockito.when(userProfileService.updateUserDetails(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(updateUserProfileStubData);
+        mockMvc.perform(put("/api/v1/user/" + updateUserProfileStubData.getEmail())
+                .content(mapper.writeValueAsString(updateUserProfileStubData))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testUpdateUserProfileFailure() throws Exception {
+
+        Mockito.when(userProfileService.updateUserDetails(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(updateUserProfileStubData);
+        mockMvc.perform(put("/api/v1/user/" + "keee")
+                .content(mapper.writeValueAsString(updateUserProfileStubData))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict());
     }
 }
