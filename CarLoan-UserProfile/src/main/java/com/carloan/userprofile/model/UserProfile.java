@@ -35,4 +35,12 @@ public class UserProfile {
         this.salary = salary;
         this.contact = contact;
     }
+
+    public UserProfile(int userId, String name, String email, Double salary, Long contact) {
+        this.userId = userId;
+        this.name = name;
+        this.email = email;
+        this.salary = salary;
+        this.contact = contact;
+    }
 }
