@@ -12,5 +12,6 @@ public interface UserProfileService {
 
     UserProfile registerUser(UserProfile userProfile) throws UserProfileAlreadyExistsException;
 
-    void updateUserDetails(String email,UserProfile userProfile) throws UserProfileNotFoundException;
+    UserProfile updateUserDetails(String email,UserProfile userProfile) throws UserProfileNotFoundException;
+
 }

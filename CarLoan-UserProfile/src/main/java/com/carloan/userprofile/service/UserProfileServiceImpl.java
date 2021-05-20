@@ -39,7 +39,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public void updateUserDetails(String email, UserProfile userProfile) throws UserProfileNotFoundException {
+    public UserProfile updateUserDetails(String email, UserProfile userProfile) throws UserProfileNotFoundException {
         UserProfile user = userProfileRepository.findByEmail(email).orElseThrow(() -> new UserProfileNotFoundException("User doesn't exist"));
 
         try {
@@ -51,5 +51,6 @@ public class UserProfileServiceImpl implements UserProfileService {
         } catch (Exception e) {
             throw new UserProfileNotFoundException("User doesn't exist");
         }
+        return user;
     }
 }
