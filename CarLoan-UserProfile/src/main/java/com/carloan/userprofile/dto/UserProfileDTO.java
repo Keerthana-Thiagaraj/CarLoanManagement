@@ -1,11 +1,11 @@
 package com.carloan.userprofile.dto;
 
-import com.carloan.userprofile.validation.EmailContent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -21,8 +21,15 @@ public class UserProfileDTO {
     @NotNull
     private Double salary;
 
-    @EmailContent
+    @Email
     private String email;
 
     private Long contact;
+
+    public UserProfileDTO(@NotBlank(message = "Name is required") String name, @NotNull Double salary, @Email String email, Long contact) {
+        this.name = name;
+        this.salary = salary;
+        this.email = email;
+        this.contact = contact;
+    }
 }
