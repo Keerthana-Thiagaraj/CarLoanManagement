@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -50,5 +51,11 @@ public class UserProfileController {
             entity = new ResponseEntity<String>("User doesn't exist", HttpStatus.CONFLICT);
         }
         return entity;
+    }
+
+    @GetMapping("/user")
+    public List<UserProfile> fetchUserProfiles() {
+
+        return userProfileService.getAllUsers();
     }
 }
