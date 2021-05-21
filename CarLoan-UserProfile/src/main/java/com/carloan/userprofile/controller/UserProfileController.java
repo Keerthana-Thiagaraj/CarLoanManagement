@@ -59,4 +59,12 @@ public class UserProfileController {
         return ResponseEntity.status(HttpStatus.OK).body(userProfileService.getAllUsers());
     }
 
+    @PostMapping("/checkLoanEligibility/{userId}")
+    public ResponseEntity<String> getLoanEligibilityStatus(@PathVariable("userId") int user_id) throws UserProfileNotFoundException {
+        log.info("user id " + user_id);
+        if (userProfileService.findLoanEligibility(user_id)) {
+            return new ResponseEntity<String>("Eligible", HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("InEligible", HttpStatus.EXPECTATION_FAILED);
+    }
 }

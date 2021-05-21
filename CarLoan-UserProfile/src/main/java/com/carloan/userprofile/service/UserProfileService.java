@@ -14,4 +14,6 @@ public interface UserProfileService {
 
     UserProfile updateUserDetails(String email,UserProfile userProfile) throws UserProfileNotFoundException;
 
+    boolean findLoanEligibility(int user_id) throws UserProfileNotFoundException;
+
 }

@@ -53,4 +53,14 @@ public class UserProfileServiceImpl implements UserProfileService {
         }
         return user;
     }
+
+    @Override
+    public boolean findLoanEligibility(int user_id) throws UserProfileNotFoundException {
+
+        UserProfile userProfile = userProfileRepository.findByUserId(user_id).orElseThrow(() -> new UserProfileNotFoundException("User doesn't exist"));
+        if (userProfile.getSalary() > 50000) {
+            return true;
+        }
+        return false;
+    }
 }
