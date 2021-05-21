@@ -22,6 +22,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,7 +49,7 @@ public class UserProfileControllerTest {
 
     private UserProfileDTO userProfile;
 
-    private UserProfile updateUserProfileStubData = new UserProfile(1, "keerthana", "keertana.t1308@gmail.com", 200000.0, 9500387199L);
+    private UserProfile userProfileStubData = new UserProfile(1, "keerthana", "keertana.t1308@gmail.com", 200000.0, 9500387199L);
 
     @Autowired
     private MockMvc mockMvc;
@@ -75,9 +79,9 @@ public class UserProfileControllerTest {
     @Test
     public void testUpdateUserProfileSuccess() throws Exception {
 
-        Mockito.when(userProfileService.updateUserDetails(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(updateUserProfileStubData);
-        mockMvc.perform(put("/api/v1/user/" + updateUserProfileStubData.getEmail())
-                .content(mapper.writeValueAsString(updateUserProfileStubData))
+        Mockito.when(userProfileService.updateUserDetails(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(userProfileStubData);
+        mockMvc.perform(put("/api/v1/user/" + userProfileStubData.getEmail())
+                .content(mapper.writeValueAsString(userProfileStubData))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -85,10 +89,11 @@ public class UserProfileControllerTest {
     @Test
     public void testUpdateUserProfileFailure() throws Exception {
 
-        Mockito.when(userProfileService.updateUserDetails(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(updateUserProfileStubData);
+        Mockito.when(userProfileService.updateUserDetails(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(userProfileStubData);
         mockMvc.perform(put("/api/v1/user/" + "keee")
-                .content(mapper.writeValueAsString(updateUserProfileStubData))
+                .content(mapper.writeValueAsString(userProfileStubData))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isConflict());
     }
+
 }
