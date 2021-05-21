@@ -16,13 +16,13 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/user")
 public class UserProfileController {
 
     @Autowired
     private UserProfileService userProfileService;
 
-    @PostMapping("/user")
+    @PostMapping("/")
     public ResponseEntity<String> registerUserProfile(@RequestBody @Valid UserProfileDTO userProfileDTO) {
 
         ResponseEntity<String> entity;
@@ -37,7 +37,7 @@ public class UserProfileController {
         return entity;
     }
 
-    @PutMapping("/user/{email}")
+    @PutMapping("/updateUser/{email}")
     public ResponseEntity<String> updateUserProfile(@PathVariable("email") String email, @RequestBody UserProfileDTO userProfileDTO) {
 
         ResponseEntity<String> entity;
@@ -53,9 +53,10 @@ public class UserProfileController {
         return entity;
     }
 
-    @GetMapping("/user")
-    public List<UserProfile> fetchUserProfiles() {
+    @GetMapping("/")
+    public ResponseEntity<List<UserProfile>> fetchUserProfiles() {
 
-        return userProfileService.getAllUsers();
+        return ResponseEntity.status(HttpStatus.OK).body(userProfileService.getAllUsers());
     }
+
 }
