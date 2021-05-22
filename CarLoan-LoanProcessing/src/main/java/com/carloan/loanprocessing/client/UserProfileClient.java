@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
 
-@FeignClient("UserProfile-Service")
+@FeignClient("userprofile")
 public interface UserProfileClient {
 
     @GetMapping("/api/v1/user/{userId}")
