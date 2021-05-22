@@ -32,4 +32,15 @@ public class Loan {
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date createdAt;
+
+    @Column
+    private Double amount;
+
+    public Loan(int userId, LoanType type, LoanStatus status, Date createdAt, Double amount) {
+        this.userId = userId;
+        this.type = type;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.amount = amount;
+    }
 }
