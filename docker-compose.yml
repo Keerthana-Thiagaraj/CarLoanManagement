@@ -1,0 +1,56 @@
+version: '3.5'
+services:
+  servicediscovery:
+    image: service-discovery:latest
+    container_name: servicediscovery
+    build:
+      context: ./service-discovery-server
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    networks:
+      - test-network
+
+  postgres:
+    image: postgres:11
+    container_name: postgres
+    env_file:
+      - database.env
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - test-network
+
+  userprofile:
+    image: user-profile:latest
+    container_name: userprofile
+    build:
+      context: ./CarLoan-UserProfile
+      dockerfile: Dockerfile
+    ports:
+      - "8443:8443"
+    depends_on:
+      - postgres
+      - servicediscovery
+    networks:
+      - test-network
+
+  loanprocessing:
+    image: loanprocessing:latest
+    container_name: loanprocessing
+    build:
+      context: ./CarLoan-LoanProcessing
+      dockerfile: Dockerfile
+    ports:
+      - "8444:8444"
+    depends_on:
+      - postgres
+      - servicediscovery
+      - userprofile
+    networks:
+      - test-network
+
+networks:
+  test-network:
+
