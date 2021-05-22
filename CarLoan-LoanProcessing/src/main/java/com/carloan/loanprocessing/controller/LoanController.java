@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Date;
 
 @RestController
@@ -31,11 +32,10 @@ public class LoanController {
     private LoanService loanService;
 
     @PostMapping("/apply")
-    public ResponseEntity<String> applyLoan(@RequestBody LoanRequestDto loanRequestDto) throws UserProfileNotFoundException, IneligibleUserException {
+    public ResponseEntity<String> applyLoan(@RequestBody @Valid LoanRequestDto loanRequestDto) throws UserProfileNotFoundException, IneligibleUserException {
         ResponseEntity<String> entity;
 
         if (userProfileClient.findUserProfileById(loanRequestDto.getUserId()).isPresent()) {
-            log.info("user is present");
             if (userProfileClient.getLoanEligibilityStatus(loanRequestDto.getUserId())) {
                 Loan loan = new Loan(loanRequestDto.getUserId(), LoanType.INDIVIDUAL, LoanStatus.APPROVED, new Date(), loanRequestDto.getAmount());
                 loanService.apply(loan);
