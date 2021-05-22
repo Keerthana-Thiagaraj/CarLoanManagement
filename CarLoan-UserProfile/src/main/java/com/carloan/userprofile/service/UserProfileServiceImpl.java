@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -56,11 +57,15 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     @Override
     public boolean findLoanEligibility(int user_id) throws UserProfileNotFoundException {
-
         UserProfile userProfile = userProfileRepository.findByUserId(user_id).orElseThrow(() -> new UserProfileNotFoundException("User doesn't exist"));
         if (userProfile.getSalary() > 50000) {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Optional<UserProfile> findUserProfileById(int user_id) {
+        return userProfileRepository.findByUserId(user_id);
     }
 }
